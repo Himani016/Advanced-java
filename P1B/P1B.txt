@@ -1,0 +1,99 @@
+<html>
+    <head>
+        <title>P1B</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div>P1B HIMANI</div>
+        <form action="MyServices">
+            Enter Username: <input type="Text" name="username"><br>
+            Enter password: <input type="password" name="pass"><br>
+            <button type="submit" value="Login"> Login </button>
+    </body>
+</html>
+
+
+
+
+
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+
+public class MyServices extends HttpServlet {
+
+
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet MyServices</title>");            
+            out.println("</head>");
+            out.println("<body>");
+            
+             String s1= request.getParameter("username");
+            String s2= request.getParameter("pass");
+            if(s1.equals("Admin") && s2.equals("upg"))
+                    out.println("<H1> "+ "LOGIN SUCCESSFUL.." +"</H1>" );
+                else
+                    out.println("<H1>"+ "LOGIN FAIL.."+"</H1>");
+            out.println("</body>");
+            out.println("</html>");
+            out.println("</body>");
+            out.println("</html>");
+        }
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+/
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
+
+}
+
+
+
+
+
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    
+    <servlet>
+        <servlet-name>MyServices</servlet-name>
+        <servlet-class>MyServices</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>MyServices</servlet-name>
+        <url-pattern>/MyServices</url-pattern>
+    </servlet-mapping>
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+    <welcome-file-list>
+        <welcome-file>index.html </welcome-file>
+    </welcome-file-list>
+</web-app>
