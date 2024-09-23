@@ -1,0 +1,73 @@
+PRACTICAL 3D
+Index,html:
+<html>
+ <head>
+ <title>TODO supply a title</title>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ </head>
+ <body>
+ <form action="CCServlet1">
+ <h1>Currency Converter</h1>
+ <h3>Enter Amount: <input type="text" name="amt"><br/>
+ Convert To: <select name="convert" id="convert">
+ <option value="Default" name="Default">Select currency</option>
+ <option value="Dollar" name="Dollar">Dollar</option>
+ <option value="Euro" name="Euro">Euro</option>
+ <option value="Dinar" name="Dinar">Dinar</option>
+ </select><br/>
+ <input type="submit" value="Convert"></h3>
+ </form>
+ </body>
+</html>
+CCServlet1.java:
+import javax.ejb.EJB;
+import mypack.*;
+@WebServlet(urlPatterns = {"/CCServlet1"})
+public class CCServlet1 extends HttpServlet {
+ @EJB
+ CCBean obj;
+ protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+ throws ServletException, IOException {
+ response.setContentType("text/html;charset=UTF-8");
+ try (PrintWriter out = response.getWriter()) {
+ /* TODO output your page here. You may use following sample code. */
+ out.println("<!DOCTYPE html>");
+ out.println("<html>");
+ out.println("<head>");
+ out.println("<title>Servlet CCServlet1</title>");
+ out.println("</head>");
+ out.println("<body>");
+
+ double amount=Double.parseDouble(request.getParameter("amt"));
+ if(request.getParameter("convert").equals("Dollar")){
+ out.println("Dollar = "+obj.rupees_dollar(amount));
+ }else if(request.getParameter("convert").equals("Euro")){
+ out.println("Euro = "+obj.rupees_euro(amount));
+}else if(request.getParameter("convert").equals("Dinar")){
+ out.println("Dinar = "+obj.rupees_dinar(amount));
+ }else{
+ out.println("Please select the currency!");
+ }
+
+ out.println("</body>");
+ out.println("</html>");
+ }
+ }
+}
+CCBean.java:
+package mypack;
+import javax.ejb.Stateless;
+@Stateless
+public class CCBean {
+ //default constructor
+ public double rupees_dollar(double a){
+ return a/83.96;
+ }
+ public double rupees_euro(double b){
+ return b/91.70;
+ }
+ public double rupees_dinar(double c){
+ return c/274.78;
+ }
+}
