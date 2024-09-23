@@ -1,0 +1,237 @@
+practical 3B
+
+<html>
+<head>
+<title>TODO supply a title</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+<style> body {
+background-color: #333; color: #ddd;
+font-family: Arial, sans-serif; padding: 20px;
+}
+form {
+max-width: 400px; margin: 0 auto;
+background-color: #333; padding: 20px;
+border-radius: 8px;
+box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+form label{ color: white;
+}
+input[type="text"], input[type="password"] {
+width: calc(100% - 20px);
+padding: 10px; margin: 8px 0;
+border: 1px solid #444; background-color: #444; color: #fff;
+border-radius: 4px;
+box-sizing: border-box;
+}
+input[type="submit"], input[type="reset"] {
+width: 100%;
+padding: 10px; margin-top: 10px; border: none;
+background-color: #4CAF50; color: white;
+cursor: pointer; border-radius: 4px; font-size: 16px;
+}
+input[type="submit"]:hover, input[type="reset"]:hover {
+background-color: #45a049;
+}
+input[type="submit"]:active, input[type="reset"]:active {
+background-color: #3e8e41;
+}
+h2 {
+color: white; text-align: center;
+}
+</style>
+</head>
+<body>
+<form action="login.jsp" method="post">
+<h2>User Login</h2>
+<label for="username">Enter Username:</label>
+<input type="text" id="username" name="username" required>
+<label for="password">Enter Password:</label>
+<input type="password" id="password" name="password" required>
+<input type="submit" value="Login">
+<input type="reset" value="Reset">
+</form>
+</body>
+</html>
+index.html
+<html>
+<head>
+<title>TODO supply a title</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body {
+background-color: #333; color: #fff;
+font-family: Arial, sans-serif; margin: 0;
+padding: 0;
+}
+div {
+width: 80%; margin: 100px auto; text-align: center;
+}
+h1 {
+font-size: 1.5em; margin-bottom: 20px;
+}
+a {
+color: #fff;
+text-decoration: none; padding: 10px 20px;
+background-color: #555; border-radius: 5px; display: inline-block; margin: 10px;
+transition: background-color 0.3s ease;
+}
+a:hover {
+background-color: #777;
+}
+</style>
+</head>
+<body>
+<div>
+<h1>New user?</h1><a href="register.html">Click Here TO Register</a>
+<h1>Old user?</h1><a href="login.html">Click Here TO Login</a>
+</div>
+</body>
+</html>
+register.html
+<html>
+<head>
+<title>TODO supply a title</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style> body {
+background-color: #222; color: #ddd;
+font-family: Arial, sans-serif; padding: 20px;
+}
+form {
+max-width: 400px;
+margin: 0 auto;
+background-color: #333; padding: 20px;
+border-radius: 8px;
+box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+input[type="text"], input[type="password"], input[type="email"] {
+width: calc(100% - 20px);
+padding: 10px; margin: 8px 0;
+border: 1px solid #444; background-color: #444; color: #ddd;
+border-radius: 4px;
+box-sizing: border-box;
+}
+input[type="submit"], input[type="reset"] {
+width: 100%;
+padding: 10px; margin-top: 10px; border: none;
+background-color: #4CAF50; color: white;
+cursor: pointer; border-radius: 4px; font-size: 16px;
+}
+input[type="submit"]:hover, input[type="reset"]:hover {
+background-color: #45a049;
+}
+input[type="submit"]:active, input[type="reset"]:active {
+background-color: #3e8e41;
+}
+h2 {
+text-align: center;
+}
+</style>
+</head>
+<body>
+<form action="register.jsp" method="post">
+<h2>User Registration</h2>
+<label for="username">Enter Username:</label>
+<input type="text" id="username" name="username" required>
+<label for="password">Enter Password:</label>
+<input type="password" id="password" name="password" required>
+<label for="password_confirm">Re-Enter Password:</label>
+<input type="password" id="password_confirm" name="password_confirm" required>
+<label for="email">Enter Email:</label>
+<input type="email" id="email" name="email" required>
+<label for="country">Enter Country Name:</label>
+<input type="text" id="country" name="country" required>
+<input type="submit" value="Register">
+<input type="reset" value="Reset">
+</form>
+</body>
+</html>
+register.jsp
+<%@page contentType="text/html" pageEncoding="UTF-8" import="java.sql.*"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>JSP Page</title>
+</head>
+<body>
+<%
+String s1 = request.getParameter("username"); String s2 = request.getParameter("password");
+String s3 = request.getParameter("password_confirm"); String s4 = request.getParameter("email");
+String s5 = request.getParameter("country");
+if(s2.equals(s3))
+{
+try{
+Class.forName("com.mysql.jdbc.Driver");
+Connection conn =
+DriverManager.getConnection("jdbc:mysql://localhost:3306/test","root","root");
+PreparedStatement pst =conn.prepareStatement("insert into registration_041 values(?,?,?,?)");
+pst.setString(1, s1); pst.setString(2, s2); pst.setString(3, s4); pst.setString(4, s5);
+int rows = pst.executeUpdate();
+if(rows==1){
+out.println("Mubarakho !!! Registration Succesfully !!!");
+}
+else{
+out.println("Kuch Toh Gadbad Hai...!!! Firse try Kar!!!");
+%>
+<jsp:include page="register.html"></jsp:include>
+<%
+}
+}
+catch(Exception e){
+out.write("Exception :"+e);
+}
+}
+else{
+out.print("Password Mismatch..!!! Reenter All Details");
+%>
+<jsp:include page="register.html"></jsp:include>
+<%
+}
+%>
+</body>
+</html>
+login.jsp
+<%@page contentType="text/html" pageEncoding="UTF-8" import="java.sql.*"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>JSP Page</title>
+</head>
+<body>
+<%
+String s1 =request.getParameter("username");
+String s2 =request.getParameter("password");
+try{
+Class.forName("com.mysql.jdbc.Driver");
+Connection conn
+= DriverManager.getConnection("jdbc:mysql://localhost:3306/test","root","root");
+PreparedStatement pst = conn.prepareStatement("select * from registration_041 where username=?");
+pst.setString(1,s1);
+ResultSet rs = pst.executeQuery();
+if (rs.next()){
+if(rs.getString(2).equals(s2)){
+out.print("Login HoGaya Mubarakho !!");
+}
+else{
+out.print("Appka Password Galat hai !!");
+%>
+<jsp:include page="login.html"></jsp:include>
+<% }
+}
+else{
+out.print("Tum Exist Nhi karte Register Karo Jaakar");
+%>
+<jsp:include page="register.html"></jsp:include>
+<%
+}
+}
+catch(Exception e){
+out.print("Exception:"+e);
+%>
+</body>
+</html>
