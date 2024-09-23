@@ -1,0 +1,367 @@
+Practical-3A
+index.html
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div></div>
+        <form action="validate.jspx">
+            Enter your Name: <input type="text" name="uname"><br>
+            Enter your Age:<input type="text" name="age"><br>
+            Select your Hobbies<input type="checkbox" name="hobbie" value="Singing">Singing
+                               <input type="checkbox" name="hobbie" value="Reading">Reading
+                               <input type="checkbox" name="hobbie" value="Dancing">Dancing
+                               <input type="checkbox" name="hobbie" value="Playing">Playing
+                               <input type="checkbox" name="hobbie" value="FootBall">Football<br>
+            Enter your Email:<input type="email" name="email"> <br>
+            Select Gender :<input type="radio" name="gender" value="male">Male
+                            <input type="radio" name="gender" value="female">Female
+                            <input type="radio" name="gender" value="others">Others<br>
+            <input type="hidden" name="error" value="">
+            <button type="submit"> Submit Form</button>
+               
+                               
+        </form>
+    </body>
+</html>
+
+Successful.jsp
+<%-- 
+    Document   : Successful
+    Created on : 22 Jul, 2024, 8:02:58 AM
+    Author     : Admin
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Registration Successful!!!!</title>
+    </head>
+    <body>
+        <h1>Data Validated Successfully!!!!</h1>
+    </body>
+</html>
+
+validate.jspx
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    Document   : validate
+    Created on : 22 Jul, 2024, 8:18:24 AM
+    Author     : Admin
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+
+    <jsp:directive.page contentType="text/html" pageEncoding="UTF-8" import="mypackage.CheckerBean"/>
+
+    <!-- any content can be specified here, e.g.: -->
+    <jsp:element name="text">
+        <jsp:attribute name="lang">EN</jsp:attribute>
+        <jsp:body>Validation Page</jsp:body>
+        <jsp:useBean id="obj" scope="request" class="mypackage.CheckerBean">
+        <jsp:setProperty name="obj" property="*"></jsp:setProperty>
+        
+        <jsp:scriptlet>
+            if (obj.validate()){
+  
+        </jsp:scriptlet>
+        <jsp:forward page="Successful.jsp"></jsp:forward>
+        <jsp:scriptlet>
+        } else {
+        </jsp:scriptlet>
+        <jsp:include page="index.html"></jsp:include>
+        <jsp:scriptlet>
+            }
+        </jsp:scriptlet>
+        <jsp:expression> obj.getError()</jsp:expression>
+        </jsp:useBean>
+
+        
+    </jsp:element>
+
+</jsp:root>
+
+CheckerBean.java
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package mypackage;
+
+/**
+ *
+ * @author Admin
+ */
+public class CheckerBean {
+    private String uname, age, hobbie, email, gender, error;
+    public CheckerBean()
+    {
+        error="";
+    }
+    public void setUname(String n)
+    {
+        uname=n;
+    }
+    public void setAge(String a){age=a;}
+    public void setHobbie(String h){hobbie=h;}
+    public void setEmail(String e){email=e;}
+    public void setGender(String g){gender=g;}
+    public void setError(String e){error=e;}
+    
+    
+      public String getUname()
+    {
+        return uname;
+    }
+    public String getAge(){return age;}
+    public String getHobbie(){return hobbie;}
+    public String getEmail(){return email;}
+    public String getGender(){return gender;}
+    public String getError(){return error;}
+    
+    public boolean validate()
+    {
+        boolean res=true;
+        if (uname.trim().equals("")||(uname==null))
+        {
+            error+="<br> Enter First name";
+            res=false;
+        }
+        if (age.length() > 2||(age==null))
+        {
+            error+="<br> Age Invalid!!";
+            res=false;
+        }
+        return res;
+    }
+}
+
+Practical-3B
+
+index.html
+
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div></div>
+        <h2>New User?</h2>
+        <a href="Registration.html">Click here for Registartion</a>
+        <h2>Old User?</h2>
+        <a href="Login.html">Click here for Login</a>
+    </body>
+</html>
+
+Registration.html
+
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <form action="Registration.jsp">
+            <h1>New User Registration Form</h1>
+            Enter the Name: <input type="text" name="name">
+            <br>
+            Enter the Password: <input type="password" name="pass">
+            <br>
+            Re-Enter the Password: <input type="password" name="repass">
+            <br>
+            Enter the Email: <input type="Email" name="emaill">
+            <br>
+            Enter the Country Name: <input type="text" name="country">
+            <br>
+            <button type="reset">Reset</button>
+            <button type="submit">Register</button>
+        </form>
+    </body>
+</html>
+
+Login.html
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+       <h1>Login Page</h1>
+            Enter the Name: <input type="text" name="tname">
+            <br>
+            Enter the Password: <input type="password" name="Epass">
+            <br>
+            <button type="reset">Reset</button>
+            <button type="submit">~~Login~~</button>
+    </body>
+</html>
+
+Registration.jsp
+
+<%-- 
+    Document   : Registration
+    Created on : 15 Jul, 2024, 8:04:19 AM
+    Author     : Admin
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8" import ="java.sql.*"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+        <%
+            //java scriptlet
+            String S1=request.getParameter("name");
+            String S2=request.getParameter("pass");
+            String S3=request.getParameter("repass");
+            String S4=request.getParameter("emaill");
+            String S5=request.getParameter("country");
+            
+            if(S2.equals(S3))
+            {
+                //Database connectivity code
+                try
+                {
+                    Class.forName("com.mysql.jdbc.Driver");
+                    Connection conn=DriverManager.getConnection("jdbc:mysql://localhost:3306/test","root","root");
+                    PreparedStatement pst=conn.prepareStatement("insert into registration_20 values(?,?,?,?)");
+                    pst.setString(1, S1);
+                    pst.setString(2, S2);
+                    pst.setString(3, S4);
+                    pst.setString(4, S5);
+                    int rows=pst.executeUpdate();
+                    if(rows==1)
+                    {
+                        out.print("Registration successfully");
+                        
+                    }
+                    else
+                    {
+                        out.println("Registration Failed!!!!,Try it once againn");
+                        %>
+                        <jsp:include page="Registartion.html"></jsp:include>
+                        <%
+                    }
+                }
+                catch(Exception e)
+                {
+                    out.print("Exception= "+e);
+                }  
+            }
+                        
+            else
+            {
+                out.println("Password mismatch!!!! ,Register once again.....");
+                %>
+        
+                <jsp:include page="Registration.html"></jsp:include>
+        
+                <%
+               
+            }
+        %> 
+       
+    </body>
+</html>
+
+Login.jsp
+
+<%-- 
+    Document   : Login
+    Created on : 15 Jul, 2024, 8:04:39 AM
+    Author     : Admin
+--%>
+<%@page contentType="text/html" pageEncoding="UTF-8" import="java.sql.*"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+        
+        <%
+            //java scriptlet
+            String S1=request.getParameter("name");
+            String S2=request.getParameter("pass");
+            
+            try
+            {
+                //Database connectivity code
+                Class.forName("com.mysql.jdbc.Driver");
+                Connection conn=DriverManager.getConnection("jdbc:mysql://localhost:3306/test","root","root");
+                PreparedStatement pst=conn.prepareStatement("select*from registration_20 where name= ?");
+                pst.setString(1,S1);
+                ResultSet rs=pst.executeQuery();
+                
+                if(rs.next())
+                {
+                    if(rs.getString(2).equals(S2))
+                    {
+                        out.println("Loginn sucessfull..........");
+                    }
+                    else
+                    {
+                        //wrong password
+                        //login page
+                        out.println("password incorrect....!!, please try again..");
+                        %>
+                         <jsp:include page="Login.html"></jsp:include>
+                        <%
+                    }
+                    out.print("Username does not exist..Please register ");
+                    %>
+                    <jsp:include page="Registration.html"></jsp:include>
+                    <%
+                }
+            }
+            catch(Exception e)
+            {
+                    out.print("Exception= "+e);
+            }
+            
+        %>
+            
+    </body>
+</html>
+
+
+
+
+
