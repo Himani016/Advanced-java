@@ -1,0 +1,90 @@
+PRACTICAL 3E
+Index.html
+<html>
+ <head>
+ <title>Room reservation</title>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ </head>
+ <body>
+ <form action="RRServlet">
+ <h1>Room booking</h1>
+ <h3>Customer Name: <input type="text" name="cname"><br/>
+ Customer Mobile Number: <input type="text" name="cno"><br/>
+ Room Type: <input type="radio" name="rtype" value="deluxe"> Deluxe
+ <input type="radio" name="rtype" value="super deluxe"> Super Deluxe
+ <input type="radio" name="rtype" value="suit"> Suit<br/>
+ <input type="submit" value="Book"></h3>
+ </form>
+ </body>
+</html>
+RRServlet.java:
+import javax.ejb.EJB;
+import mypack.*;
+protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+ throws ServletException, IOException {
+ response.setContentType("text/html;charset=UTF-8");
+ try (PrintWriter out = response.getWriter()) {
+ out.println("<!DOCTYPE html>");
+ out.println("<html>");
+ out.println("<head>");
+ out.println("<title>Servlet RRServlet</title>");
+ out.println("</head>");
+ out.println("<body>");
+
+ String cn=request.getParameter("cname");
+ String cm=request.getParameter("cno");
+ String rt=request.getParameter("rtype");
+
+ String message= obj.roombooking(cn, cm, rt);
+ out.println(message);
+ out.println("</body>");
+ out.println("</html>");
+ }
+ }
+RRBean.java
+package mypack;
+import java.sql.*;
+import javax.ejb.Stateful;
+@Stateful
+public class RRBean {
+ public RRBean(){
+
+ }
+ public String roombooking(String cn, String cm, String rt){
+ String message="";
+ try{
+ Class.forName("com.mysql.jdbc.Driver");
+ Connection con= DriverManager.getConnection("jdbc:mysql://localhost:3306/test","root","root");
+ String query="select * from roombook28 where roomtype=? and statusroom='not booked'";
+ PreparedStatement pst=con.prepareStatement(query);
+ pst.setString(1,rt);
+ ResultSet rs= pst.executeQuery();
+ if(rs.next()){
+ String rno=rs.getString(1);
+ PreparedStatement psmt1=con.prepareStatement("update roombook28 set cust=? where
+roomid=?");
+ psmt1.setString(1,cn);
+ psmt1.setString(2, rno);
+ psmt1.executeUpdate();
+
+ psmt1=con.prepareStatement("update roombook28 set mob=? where roomid=?");
+ psmt1.setString(1,cm);
+ psmt1.setString(2, rno);
+ psmt1.executeUpdate();
+
+ psmt1=con.prepareStatement("update roombook28 set statusroom=? where roomid=?");
+ psmt1.setString(1,"Booked");
+ psmt1.setString(2, rno);
+ psmt1.executeUpdate();
+
+ message= "Room "+rno+" Booked and Charges = "+rs.getString(3);
+ }else{
+ message="Room "+rt+" currently not avialable";
+ }
+ }catch(Exception e){
+ message=""+e;
+ }
+ return message;
+ }
+}
