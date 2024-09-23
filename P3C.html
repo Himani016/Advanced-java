@@ -1,0 +1,227 @@
+index.html:
+<html>
+ <head>
+ <title>Index</title>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ </head>
+ <body>
+ <h1>Choose Option</h1>
+ <h3><a href="insert.jsp">Insert Record</a></h3>
+ <h3><a href="display.jsp">Display Record</a></h3>
+ </body>
+</html>
+insert.jsp :
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<!DOCTYPE html>
+<html>
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+ <title>Insert Record</title>
+ </head>
+ <body>
+ <form action="insertdb.jsp">
+ <table border="1">
+ <tr>
+ <th colspan="2">Purchase Product</th>
+ </tr>
+ <tr>
+ <td>Product ID</td>
+ <td><input type="text" name="pid"></td>
+ </tr>
+ <tr>
+ <td>Product Name</td>
+ <td><input type="text" name="pname"></td>
+ </tr>
+ <tr>
+ <td>Quantity</td>
+ <td><input type="text" name="quantity"></td>
+ </tr>
+ <tr>
+ <td><input type="submit" value="Save"></td>
+ <td><input type="reset" name="Reset"></td>
+ </tr>
+ </table>
+ </form>
+ <font color="red">
+<c:if test="${not empty param.errMsg}">
+ <c:out value="${param.errMsg}"/>
+ <a href="index.html">Go Back</a>
+ </c:if>
+ </font>
+ <font color="green">
+ <c:if test="${not empty param.susMsg}">
+ <c:out value="${param.susMsg}"/>
+ <a href="index.html">Go Back</a>
+ </c:if>
+ </font>
+ </body>
+</html>
+insertdb.jsp:
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.io.*,java.util.*,java.sql.*"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql" %>
+<!DOCTYPE html>
+<html>
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+ <title>Insert Database</title>
+ </head>
+ <body>
+ <c:if test="${empty param.pid or empty param.pname or empty param.quantity}">
+ <c:redirect url="insert.jsp">
+ <c:param name="errMsg" value="Please enter product details"/>
+ </c:redirect>
+ </c:if>
+ <sql:setDataSource var="dbsource" driver="com.mysql.jdbc.Driver"
+url="jdbc:mysql://localhost/test" user="root" password="root"/>
+ <sql:update dataSource="${dbsource}" var="result">
+ INSERT INTO product_details_28 VALUES(?,?,?);
+ <sql:param value="${param.pid}"/>
+ <sql:param value="${param.pname}"/>
+ <sql:param value="${param.quantity}"/>
+ </sql:update>
+ <c:if test="${result>=1}">
+ <font size="5" color='green'>Congratulations! Data inserted successful.</font>
+ <c:redirect url="insert.jsp">
+ <c:param name="susMsg" value="Congratulations! Data inserted successful."/>
+ </c:redirect>
+ </c:if>
+ </body>
+</html>
+display.jsp:
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.io.*,java.util.*,java.sql.*"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql" %>
+<!DOCTYPE html>
+<html>
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+ <title>Display Page</title>
+ <script>
+ function confirmGo(m,u){
+ if(confirm(m)){
+ window.location=u;
+ }
+ }
+ </script>
+ </head>
+ <body>
+ <sql:setDataSource var="dbsource" driver="com.mysql.jdbc.Driver"
+url="jdbc:mysql://localhost/test" user="root" password="root"/>
+ <sql:query dataSource="${dbsource}" var="result">
+ SELECT * from product_details_28;
+ </sql:query>
+ <center>
+ <form>
+ <table border="1">
+ <tr>
+ <th>Product ID</th>
+ <th>Product Name</th>
+ <th>Quantity</th>
+ <th colspan='2'>Action</th>
+ </tr>
+ <c:forEach var="row" items="${result.rows}">
+ <tr>
+ <td><c:out value="${row.pid}"/></td>
+ <td><c:out value="${row.pname}"/></td>
+ <td><c:out value="${row.quantity}"/></td>
+ <td><a href="update.jsp?pid=<c:out value="${row.pid}"/>">Update</a></td>
+ <td><a href="javascript:confirmGo('Sure to delete this record?','deletedb.jsp?pid=<c:out
+value="${row.pid}"/>')">Delete</a></td>
+ </tr>
+ </c:forEach>
+ </table>
+ </form>
+ <a href='index.html'>Go Home</a>
+ </center>
+ </body>
+</html>
+update.jsp:
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.io.*,java.util.*,java.sql.*"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql" %>
+<!DOCTYPE html>
+<html>
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+ <title>Update Page</title>
+ </head>
+ <body>
+ <sql:setDataSource var="dbsource" driver="com.mysql.jdbc.Driver"
+url="jdbc:mysql://localhost/test" user="root" password="root"/>
+ <sql:query dataSource="${dbsource}" var="result">
+ SELECT * from product_details_28 where pid=?;<sql:param value="${param.pid}"/>
+ </sql:query>
+ <form action='updatedb.jsp' method='post'>
+ <table border='1' width='40%'>
+ <caption>Update Product</caption>
+ <tr>
+ <th>Product Name</th>
+ <th>Quantity</th>
+ </tr>
+ <c:forEach var="row" items="${result.rows}">
+ <tr>
+ <td><input type='hidden' value='${param.pid}' name='pid'/>
+ <input type='text' value='${param.pname}' name='pname'/></td>
+ <td><input type='text' value='${param.quantity}' name='quantity'/></td>
+ <td><input type='submit' value='Update'/></td>
+ </tr>
+ </c:forEach>
+ </table>
+ <a href='index.html'>Go Home</a>
+ </form>
+ </body>
+</html>
+updatedb.jsp:
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.io.*,java.util.*,java.sql.*"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql" %>
+<!DOCTYPE html>
+<html>
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+ <title>UpdateDB Page</title>
+</head>
+ <body>
+ <sql:setDataSource var="dbsource" driver="com.mysql.jdbc.Driver"
+url="jdbc:mysql://localhost/test" user="root" password="root"/>
+ <sql:update dataSource="${dbsource}" var="count">
+ UPDATE product_details_28 SET pname=?, quantity=? WHERE pid='${param.pid}';
+ <sql:param value="${param.pname}"/>
+ <sql:param value="${param.quantity}"/>
+ </sql:update>
+ <c:if test="${count>=1}">
+ <font size='5' color='green'>Congratulations!!! Data updated successfully</font>
+ <a href='index.html'>Go Home</a>
+ </c:if>
+ </body>
+</html>
+deletedb.jsp:
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.io.*,java.util.*,java.sql.*"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql" %>
+<!DOCTYPE html>
+<html>
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+ <title>Delete Page</title>
+ </head>
+ <body>
+ <sql:setDataSource var="dbsource" driver="com.mysql.jdbc.Driver"
+url="jdbc:mysql://localhost/test" user="root" password="root"/>
+ <sql:update dataSource="${dbsource}" var="count">
+ DELETE FROM product_details_28 WHERE pid='${param.pid}';
+ </sql:update>
+ <c:if test="${count>=1}">
+ <font size="5" color="green"> Data deleted successfully! </font><br>
+ <a href="index.html">Go Home</a>
+ </c:if>
+ </body>
+</html>
